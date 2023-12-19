@@ -11,6 +11,7 @@ import { LuSearch } from "react-icons/lu";
 import { User, Settings, Lock, LogOut } from "react-feather";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, logout } from "../firebase/firebase";
+import { useSelector } from "react-redux";
 
 export default function Navbar(props) {
   const [isDropdown, openDropdown] = useState(true);
@@ -20,7 +21,7 @@ export default function Navbar(props) {
   const navigate = useNavigate()
 
   const [user, loading, error] = useAuthState(auth);
-
+  const userState = useSelector(state => state.user)
   const isLoggedIn = user ? true: false
 
   const onLogout = async () => {
@@ -268,7 +269,7 @@ export default function Navbar(props) {
               <ul className="py-2 text-start">
                 <li>
                   <Link
-                    to="/candidate-profile"
+                    to={`/user-profile?role=${userState.role}`}
                     className="flex items-center font-medium py-2 px-4 dark:text-white/70 hover:text-emerald-600 dark:hover:text-white"
                   >
                     <User className="h-4 w-4 me-2" />

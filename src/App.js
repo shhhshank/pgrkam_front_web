@@ -62,10 +62,17 @@ import ChatBot from "react-simple-chatbot";
 import {Segment} from "semantic-ui-react";
 import { ProtectedRoute } from './route/ProtectedRoute';
 import Profile from './pages/auth/profile';
+import { useSelector } from 'react-redux';
+import SearchJob from './pages/job/SearchJob';
+import CreateJob from './pages/job/CreateJob';
 
 
 
 function App() {
+
+  const state = useSelector(state => state)
+  console.log("Redux State: ", state)
+
   useEffect(() => {
     document.documentElement.setAttribute("dir", "ltr");
     document.documentElement.classList.add('light');
@@ -83,6 +90,11 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/profile' element={<Profile/>}/>
+        <Route path='/search-job' element={<SearchJob/>}/>
+        <Route path='create-job' element={<CreateJob/>}/>
+        {/* <Route path='user-profile' element={<UserProfile/>} */}
+
+
 
         {/* <Route path="/index-three" element={<IndexThree />} />
         <Route path="/index-four" element={<IndexFour />} />

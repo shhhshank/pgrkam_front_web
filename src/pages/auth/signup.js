@@ -28,7 +28,7 @@ export default function Signup() {
       return;
     }
     if (user) {
-      navigate('/')
+      navigate('/profile')
       //logout();
     }
 
@@ -44,6 +44,12 @@ export default function Signup() {
     
     dispatch(setAuthInfo(token))
     dispatch(setUserInfo(user))
+
+    localStorage.setItem('token', JSON.stringify(token))
+    localStorage.setItem('user', JSON.stringify(user))
+
+
+
   }
 
   const registerWithEmail = async () => {
@@ -58,8 +64,9 @@ export default function Signup() {
     }
 
     await UserApi.createUser(newUser)
-
     await loginWithApi(idTokenResult.token)
+
+
   }
 
 

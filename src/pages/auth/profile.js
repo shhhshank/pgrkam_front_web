@@ -17,6 +17,8 @@ import { setAuthInfo } from "../../redux/action/Auth/AuthAction";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import SeekerApi from "../../api/Seeker/SeekerApi";
+import ProviderApi from "../../api/Provider/ProviderApi";
 
 const profileTypes = [
     'SEEKER',
@@ -39,9 +41,12 @@ export default function Profile() {
   const [gender, setGender] = useState('')
   const [dob, setDob] = useState(new Date())
   const [category, setCategory] = useState('')
-  const [martialStatus, setMartialStatus] = useState('')
+  const [maritalStatus, setMartialStatus] = useState('')
 
-  const userState = useSelector(state => state.user)
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [designation, setDesignation] = useState('')
+
+  const userState = JSON.parse(localStorage.getItem('user'))
 
   const [user, loading, error] = useAuthState(auth);
   const dispatch = useDispatch()
@@ -51,20 +56,33 @@ export default function Profile() {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  console.log(userState)
+  console.log(profileType)
 
-
-
-  const createProfile = () => {
+  const createProfile = async () => {
     if(profileType == 'SEEKER'){
         const newSeeker = {
-            
+            userId:userState.id,
             fullName,
             gender,
             dob,
             category,
-            martialStatus
+            maritalStatus
         }
+        const seekerResponse = await SeekerApi.createSeeker(newSeeker)
+        localStorage.setItem('seeker', JSON.stringify(seekerResponse))
+        navigate('/')
+    }else if(profileType == 'PROVIDER'){
+      const newProvider = {
+        userId:userState.id,
+        fullName,
+        phone:phoneNumber,
+        email:userState.email,
+        designation:userState.designation
+      }
+      
+      const providerResponse = await ProviderApi.createProvider(newProvider)
+      localStorage.setItem('provider', JSON.stringify(providerResponse))
+      navigate('/')
     }
   }
 
@@ -169,17 +187,49 @@ export default function Profile() {
                     
                       </>
                     ) : (
-                        <div className="mb-4 ltr:text-left rtl:text-right">
-                    <label className="font-semibold" htmlFor="FullName">
-                      Full Name:
-                    </label>
-                    <input
-                      id="FullName"
-                      type="text"
-                      className="form-input mt-3 rounded-md"
-                      placeholder="Full Name"
-                    />
-                  </div>
+                      <>
+                      <div className="mb-4 ltr:text-left rtl:text-right">
+                          <label className="font-semibold" htmlFor="FullName">
+                          Full Name:
+                          </label>
+                        <input
+                          id="FullName"
+                          type="text"
+                          className="form-input mt-3 rounded-md"
+                          placeholder="Full Name"
+                          value={fullName}
+                          onChange={(ev) => {setFullName(ev.target.value)}}
+                        />
+                      </div>
+
+                      <div className="mb-4 ltr:text-left rtl:text-right">
+                          <label className="font-semibold" htmlFor="FullName">
+                          Phone Number:
+                          </label>
+                        <input
+                          id="FullName"
+                          type="text"
+                          className="form-input mt-3 rounded-md"
+                          placeholder="Phone Number"
+                          value={phoneNumber}
+                          onChange={(ev) => {setPhoneNumber(ev.target.value)}}
+                        />
+                      </div>
+
+                      <div className="mb-4 ltr:text-left rtl:text-right">
+                          <label className="font-semibold" htmlFor="FullName">
+                          Designation:
+                          </label>
+                        <input
+                          id="FullName"
+                          type="text"
+                          className="form-input mt-3 rounded-md"
+                          placeholder="Designation at your org."
+                          value={designation}
+                          onChange={(ev) => {setDesignation(ev.target.value)}}
+                        />
+                      </div>
+                  </>
                     )}
                   
 
@@ -194,6 +244,7 @@ export default function Profile() {
                       type="button"
                       className="btn bg-emerald-600 hover:bg-emerald-700 border-emerald-600 hover:border-emerald-700 text-white rounded-md w-full"
                       value="Create"
+                      onClick={createProfile}
                     />
                   </div>
 

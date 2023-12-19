@@ -14,6 +14,7 @@ axiosRootInstance.interceptors.request.use(
          config.headers.Authorization = JSON.parse(localStorage.getItem('token')).accessToken;
     }
     
+    console.log(config.url, config.data, config.method)
 
     return config;
   },

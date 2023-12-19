@@ -5,7 +5,7 @@ const schema = '/users'
 const createUser = async (user) => {
     return (await Axios.post(schema, user ,{
         headers:{
-            secured:true
+            secured:false
         }
     })).data
 }
