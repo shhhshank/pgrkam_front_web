@@ -58,7 +58,7 @@ export default function Profile() {
   const createProfile = () => {
     if(profileType == 'SEEKER'){
         const newSeeker = {
-            userId,
+            
             fullName,
             gender,
             dob,
