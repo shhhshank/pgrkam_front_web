@@ -10,8 +10,17 @@ const createJob = async (job) => {
     })).data
 }
 
+const filterJobs = async (filter) => {
+
+    return (await Axios.get(schema + "?" +filter, {
+        headers:{
+            secured:false
+        }
+    })).data
+}
+
 const getJob = async(userId) => {
     return (await Axios.get(schema + `/${userId}`)).data
 }
 
-export default { createJob , getJob}
+export default { createJob , getJob, filterJobs}

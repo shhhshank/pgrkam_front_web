@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Navbar from '../../components/Navbar';
 import Feature from '../../components/Feature';
 import Footer from '../../components/Footer';
@@ -7,12 +7,61 @@ import JobGridsTwoComp from '../../components/job-grids-two-comp'
 import {LuSearch} from "react-icons/lu"
 import ExploreJob from '../../components/Explore-job';
 
-export default function SearchJob() {
-    const [selectedOption, setSelectedOption] = useState('1');
+const jobTypes = ['PRIVATE', 'GOVERNMENT']
+const jobCategories = ['FULL TIME', 'PART TIME']
+const salaryTypes = ['DAILY', 'WEEKLY', 'MONTHLY', 'HOURLY']
+const experienceTypes = ['FRESHERS', 'EXPERIENCED']
+const genders = ['MALE', 'FEMALE', 'ANY']
 
-    const handleOptionChange = (event) => {
-        setSelectedOption(event.target.value);
-    };
+const disablityTypes = [
+    'NO DISABILITY',
+    'LEARNING DISABILITIES',
+    'SPEECH DISABILITY',
+    'HEALTH IMPAIRMENTS',
+    'AUTISM',
+    'INTELLECTUAL DISABILITIES',
+    'DEVELOPMENT DELAY',
+    'EMOTIONAL DISTURBANCE',
+    'MULTIPLE DISABILITIES',
+    'OTHERS',
+  ]
+
+  const qualificationTypes = [
+    'High School Diploma',
+    'General Certificate of Secondary Education (GCSE)',
+    'High School Certificate',
+    'Associate\'s Degree',
+    'Bachelor\'s Degree (e.g., Bachelor of Arts, Bachelor of Science)',
+    'Master\'s Degree (e.g., Master of Arts, Master of Science)',
+    'Postgraduate Diploma',
+    'Postgraduate Certificate',
+    'Doctor of Philosophy (Ph.D.)',
+    'Doctor of Education (Ed.D.)',
+    'Doctor of Science (D.Sc.)',
+    'Doctor of Business Administration (DBA)',
+    'Doctor of Medicine (M.D.)',
+    'Doctor of Dental Medicine (DMD)',
+    'Doctor of Veterinary Medicine (DVM)',
+    'Doctor of Pharmacy (Pharm.D.)',
+    'Doctor of Jurisprudence (J.D.)'
+  ]
+
+export default function SearchJob() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate()
+
+    const [searchQuery, setSearchQuery] = useState({})
+
+
+    const onSearch = () => {
+        setSearchParams(searchQuery, {replace:true}) 
+    }
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+
     return (
         <>
             <Navbar navClass='justify-end nav-light' />
@@ -46,130 +95,81 @@ export default function SearchJob() {
                                 <form>
                                     <div className="grid grid-cols-1 gap-3">
                                         <div>
-                                            <label htmlFor="searchname" className="font-semibold">Search Company</label>
+                                            <label htmlFor="searchname" className="font-semibold">Search Job</label>
                                             <div className="relative mt-2">
                                                 <LuSearch className="text-lg absolute top-[10px] start-3"/>
-                                                <input name="search" id="searchname" type="text" className="form-input border border-slate-100 dark:border-slate-800 ps-10" placeholder="Search" />
+                                                <input onChange={(ev) => {setSearchQuery({...searchQuery, search:ev.target.value})}} name="search" id="searchname" type="text" className="form-input border border-slate-100 dark:border-slate-800 ps-10" placeholder="Search" />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label className="font-semibold">Categories</label>
+                                            <label className="font-semibold">Job Category</label>
                                             <select className="form-select form-input border border-slate-100 dark:border-slate-800 block w-full mt-1">
-                                                <option value="WD">Web Designer</option>
-                                                <option value="WD">Web Developer</option>
-                                                <option value="UI">UI / UX Desinger</option>
+                                                {jobCategories.map((value) => <option value={value}>{capitalizeFirstLetter(value.toLowerCase())}</option>)}
                                             </select>
 
                                         </div>
 
                                         <div>
-                                            <label className="font-semibold">Location</label>
-                                            <select className="form-select form-input border border-slate-100 dark:border-slate-800 block w-full mt-1">
-                                                <option value="NY">New York</option>
-                                                <option value="MC">North Carolina</option>
-                                                <option value="SC">South Carolina</option>
+                                            <label className="font-semibold">Job Type</label>
+                                            <select onChange={(ev) => {setSearchQuery({...searchQuery, jobType:ev.target.value})}} className="form-select form-input border border-slate-100 dark:border-slate-800 block w-full mt-1">
+                                                {jobTypes.map((value) => <option value={value}>{capitalizeFirstLetter(value.toLowerCase())}</option>)}
                                             </select>
                                         </div>
 
                                         <div>
-                                            <label className="font-semibold">Job Types</label>
-                                            <div className="block mt-2">
-                                                <div className="flex justify-between">
-                                                    <label className="inline-flex items-center">
-                                                        <input type="checkbox" className="form-checkbox rounded border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50" defaultChecked />
-                                                        <span className="ms-2 text-slate-400">Full Time</span>
-                                                    </label>
-
-                                                    <span className="bg-emerald-600/10 text-emerald-600 text-xs px-2.5 py-0.5 font-semibold rounded-full h-5">3</span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <label className="inline-flex items-center">
-                                                        <input type="checkbox" className="form-checkbox rounded border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50" />
-                                                        <span className="ms-2 text-slate-400">Part Time</span>
-                                                    </label>
-
-                                                    <span className="bg-emerald-600/10 text-emerald-600 text-xs px-2.5 py-0.5 font-semibold rounded-full h-5">7</span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <label className="inline-flex items-center">
-                                                        <input type="checkbox" className="form-checkbox rounded border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50" />
-                                                        <span className="ms-2 text-slate-400">Freelancing</span>
-                                                    </label>
-
-                                                    <span className="bg-emerald-600/10 text-emerald-600 text-xs px-2.5 py-0.5 font-semibold rounded-full h-5">4</span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <label className="inline-flex items-center">
-                                                        <input type="checkbox" className="form-checkbox rounded border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50" />
-                                                        <span className="ms-2 text-slate-400">Fixed Price</span>
-                                                    </label>
-
-                                                    <span className="bg-emerald-600/10 text-emerald-600 text-xs px-2.5 py-0.5 font-semibold rounded-full h-5">6</span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <label className="inline-flex items-center">
-                                                        <input type="checkbox" className="form-checkbox rounded border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50" />
-                                                        <span className="ms-2 text-slate-400">Remote</span>
-                                                    </label>
-
-                                                    <span className="bg-emerald-600/10 text-emerald-600 text-xs px-2.5 py-0.5 font-semibold rounded-full h-5">7</span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <label className="inline-flex items-center">
-                                                        <input type="checkbox" className="form-checkbox rounded border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50" />
-                                                        <span className="ms-2 text-slate-400">Hourly Basis</span>
-                                                    </label>
-
-                                                    <span className="bg-emerald-600/10 text-emerald-600 text-xs px-2.5 py-0.5 font-semibold rounded-full h-5">44</span>
-                                                </div>
-                                            </div>
+                                            <label className="font-semibold">Salary Type</label>
+                                            <select onChange={(ev) => {setSearchQuery({...searchQuery, salaryType:ev.target.value})}} className="form-select form-input border border-slate-100 dark:border-slate-800 block w-full mt-1">
+                                                {salaryTypes.map((value) => <option value={value}>{capitalizeFirstLetter(value.toLowerCase())}</option>)}
+                                            </select>
                                         </div>
 
                                         <div>
-                                            <label className="font-semibold">Salary</label>
+                                            <label className="font-semibold">Experience Type</label>
+                                            <select onChange={(ev) => {setSearchQuery({...searchQuery, experienceType:ev.target.value})}} className="form-select form-input border border-slate-100 dark:border-slate-800 block w-full mt-1">
+                                                {experienceTypes.map((value) => <option value={value}>{capitalizeFirstLetter(value.toLowerCase())}</option>)}
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="font-semibold">Preferred Gender</label>
+                                            <select onChange={(ev) => {setSearchQuery({...searchQuery, preferredGender:ev.target.value})}} className="form-select form-input border border-slate-100 dark:border-slate-800 block w-full mt-1">
+                                                {genders.map((value) => <option value={value}>{capitalizeFirstLetter(value.toLowerCase())}</option>)}
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="font-semibold">Required Qualification</label>
+                                            <select onChange={(ev) => {setSearchQuery({...searchQuery, requiredQualification:ev.target.value})}} className="form-select form-input border border-slate-100 dark:border-slate-800 block w-full mt-1">
+                                                {qualificationTypes.map((value) => <option value={value}>{capitalizeFirstLetter(value.toLowerCase())}</option>)}
+                                            </select>
+                                        </div>
+                                        </div>
+
+                                        <div>
+                                            
                                             <div className="block mt-2">
                                                 <div>
                                                     <label className="inline-flex items-center">
-                                                        <input type="radio"
+                                                        <input type="checkbox"
                                                             className="form-radio border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50"
                                                             name="radio-colors" value="1"
-                                                            defaultChecked={selectedOption === '1'}
-                                                            onChange={handleOptionChange}
+                                                            onChange={(ev) => {setSearchQuery({...searchQuery, requiredQualification:ev.target.checked})}}
                                                         />
-                                                        <span className="ms-2 text-slate-400">10k - 15k</span>
+                                                        <span className="ms-2 text-slate-400">Job for Disabled</span>
                                                     </label>
                                                 </div>
-                                                <div>
-                                                    <label className="inline-flex items-center">
-                                                        <input type="radio"
-                                                            className="form-radio border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50"
-                                                            name="radio-colors" value="2" defaultChecked={selectedOption === '2'}
-                                                            onChange={handleOptionChange} />
-                                                        <span className="ms-2 text-slate-400">15k - 25k</span>
-                                                    </label>
-                                                </div>
-                                                <div>
-                                                    <label className="inline-flex items-center">
-                                                        <input type="radio"
-                                                            className="form-radio border-gray-200 dark:border-gray-800 text-emerald-600 focus:border-emerald-300 focus:ring focus:ring-offset-0 focus:ring-emerald-200 focus:ring-opacity-50"
-                                                            name="radio-colors" value="3" defaultChecked={selectedOption === '3'}
-                                                            onChange={handleOptionChange} />
-                                                        <span className="ms-2 text-slate-400">more than 25K</span>
-                                                    </label>
-                                                </div>
-                                            </div>
                                         </div>
 
                                         <div>
-                                            <input type="submit" className="btn bg-emerald-600 hover:bg-emerald-700 border-emerald-600 hover:border-emerald-700 text-white rounded-md w-full" value="Apply Filter" />
+                                            <input onClick={onSearch} type="button" className="btn bg-emerald-600 hover:bg-emerald-700 border-emerald-600 hover:border-emerald-700 text-white rounded-md w-full" value="Apply Filter" />
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
 
-                        <JobGridsTwoComp />
+                        <JobGridsTwoComp query={searchParams.toString()}/>
                     </div>
                 </div>
 
@@ -182,3 +182,4 @@ export default function SearchJob() {
         </>
     )
 }
+

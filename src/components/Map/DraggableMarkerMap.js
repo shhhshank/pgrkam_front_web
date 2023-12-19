@@ -15,7 +15,9 @@ function DraggableMarkerMap() {
       }
       
   return (
-        <MapContainer  center={center} zoom={13} scrollWheelZoom={false}>
+        <MapContainer 
+        style={{ width: "100%", height: "calc(100vh - 4rem)" }}
+        center={center} zoom={13} scrollWheelZoom={false}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

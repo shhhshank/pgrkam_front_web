@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ModalVideo from "react-modal-video";
 import "../../../node_modules/react-modal-video/scss/modal-video.scss";
 import Select, { components } from "react-select";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import facebook_logo from "../../assets/images/company/facebook-logo.png";
 import google_logo from "../../assets/images/company/google-logo.png";
 import android from "../../assets/images/company/android.png";
@@ -29,75 +29,57 @@ import { Segment } from "semantic-ui-react";
 
 import {useSelector} from 'react-redux'
 
-const options = [
-  { value: "AF", label: "" },
-  { value: "AZ", label: "" },
-  { value: "BS", label: "Bahamas" },
-  { value: "BH", label: "Bahrain" },
-  { value: "CA", label: "Canada" },
-  { value: "CV", label: "Cape Verde" },
-  { value: "DK", label: "Denmark" },
-  { value: "DJ", label: "Djibouti" },
-  { value: "ER", label: "Eritrea" },
-  { value: "EE", label: "Estonia" },
-  { value: "GM", label: "Gambia" },
-];
-const optionsOne = [
-  { value: "AF", label: "All Over Punjab" },
-  { value: "AZ", label: " Amritsar" },
-  { value: "BS", label: "Bathinda" },
-  { value: "BH", label: "Hoshiarpur" },
-  { value: "CA", label: "Gurdaspur" },
-  { value: "CV", label: "Barnala" },
-  { value: "DK", label: "Fridkot" },
-  { value: "DJ", label: "Jalandhar" },
-  { value: "ER", label: "Ludhiana" },
-  { value: "EE", label: "Mansa" },
-  { value: "GM", label: "Pathankot" },
-];
-const optionsTwo = [
-  { value: "1", label: "Goverment" },
-  { value: "2", label: "private" },
-];
-const optionThree = [
-  { value: "1", label: "No Schooling" },
-  { value: "2", label: "5th" },
-  { value: "3", label: "8th" },
-  { value: "4", label: "10th" },
-  { value: "5", label: "12th" },
-  { value: "6", label: "Diploma After 10th" },
-  { value: "7", label: "Diploma After 12th" },
-  { value: "8", label: "ITI" },
-  { value: "9", label: "Graduate" },
-  { value: "10", label: "PHD" },
-];
-const optionFour = [
-  { value: "1", label: "No Experience" },
-  { value: "2", label: "1 Experience" },
-  { value: "3", label: "2 Experience" },
-  { value: "4", label: "3 Experience" },
-  { value: "5", label: "4 Experience" },
-  { value: "6", label: "5 Experience" },
-  { value: "7", label: "6 Experience" },
-  { value: "8", label: "7 Experience" },
-  { value: "9", label: "8 Experience" },
-  { value: "10", label: "9 Experience" },
-  { value: "11", label: "10 Experience" },
-  { value: "12", label: "11 Experience" },
-  { value: "13", label: "12 Experience" },
-];
-const optionFive = [
-  { value: "1", label: "Back officer Executive" },
-  { value: "2", label: "PHP Devloper" },
-  { value: "3", label: "Sales Executive" },
-  { value: "4", label: "Computer Operator" },
-  { value: "5", label: "Assintant Manager" },
-];
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+const jobTypes = ['PRIVATE', 'GOVERNMENT'].map((value) => ({value:value, label:capitalizeFirstLetter(value.toLowerCase())}))
+const jobCategories = ['FULL TIME', 'PART TIME'].map((value) => ({value:value, label:capitalizeFirstLetter(value.toLowerCase())}))
+const salaryTypes = ['DAILY', 'WEEKLY', 'MONTHLY', 'HOURLY'].map((value) => ({value:value, label:capitalizeFirstLetter(value.toLowerCase())}))
+const experienceTypes = ['FRESHERS', 'EXPERIENCED'].map((value) => ({value:value, label:capitalizeFirstLetter(value.toLowerCase())}))
+const genders = ['MALE', 'FEMALE', 'ANY'].map((value) => ({value:value, label:capitalizeFirstLetter(value.toLowerCase())}))
+
+const disablityTypes = [
+    'NO DISABILITY',
+    'LEARNING DISABILITIES',
+    'SPEECH DISABILITY',
+    'HEALTH IMPAIRMENTS',
+    'AUTISM',
+    'INTELLECTUAL DISABILITIES',
+    'DEVELOPMENT DELAY',
+    'EMOTIONAL DISTURBANCE',
+    'MULTIPLE DISABILITIES',
+    'OTHERS',
+  ].map((value) => ({value:value, label:capitalizeFirstLetter(value.toLowerCase())}))
+
+  const qualificationTypes = [
+    'High School Diploma',
+    'General Certificate of Secondary Education (GCSE)',
+    'High School Certificate',
+    'Associate\'s Degree',
+    'Bachelor\'s Degree (e.g., Bachelor of Arts, Bachelor of Science)',
+    'Master\'s Degree (e.g., Master of Arts, Master of Science)',
+    'Postgraduate Diploma',
+    'Postgraduate Certificate',
+    'Doctor of Philosophy (Ph.D.)',
+    'Doctor of Education (Ed.D.)',
+    'Doctor of Science (D.Sc.)',
+    'Doctor of Business Administration (DBA)',
+    'Doctor of Medicine (M.D.)',
+    'Doctor of Dental Medicine (DMD)',
+    'Doctor of Veterinary Medicine (DVM)',
+    'Doctor of Pharmacy (Pharm.D.)',
+    'Doctor of Jurisprudence (J.D.)'
+  ].map((value) => ({value:value, label:capitalizeFirstLetter(value.toLowerCase())}))
 
 export default function IndexFive() {
   const [showChatBot, setShowChatBot] = useState(false);
   const userState = useSelector(state => state.user)
   const authState = useSelector(state => state.auth)
+
+  const navigate = useNavigate()
+
+  const [searchQuery, setSearchQuery] = useState({})
 
 
   useEffect(() => {
@@ -198,6 +180,20 @@ export default function IndexFive() {
       end: true,
     },
   ];
+
+  const serialize = function(obj) {
+    var str = [];
+    for (var p in obj)
+      if (obj.hasOwnProperty(p)) {
+        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+      }
+    return str.join("&");
+  }
+
+  const searchJob = () => {
+    navigate('/search-job?' + serialize(searchQuery))
+  }
+
   const [log, setlog] = useState(false);
   // const history = useHistory();
   const handleApplyJob = () => {
@@ -251,7 +247,8 @@ export default function IndexFive() {
                             <Select
                               className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
                               placeholder="Job Type"
-                              options={optionsTwo}
+                              options={jobTypes}
+                              onChange={(ev) => {setSearchQuery({...searchQuery,jobType:ev.value})}}
                             />
                           </div>
 
@@ -259,8 +256,9 @@ export default function IndexFive() {
                             <PiMapPin className="icons" />
                             <Select
                               className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
-                              placeholder="Location"
-                              options={optionsOne}
+                              placeholder="Experience Types"
+                              options={experienceTypes}
+                              onChange={(ev) => {setSearchQuery({...searchQuery,experienceType:ev.value})}}
                             />
                           </div>
 
@@ -269,15 +267,17 @@ export default function IndexFive() {
                             <Select
                               className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
                               placeholder="Qualification"
-                              options={optionThree}
+                              options={qualificationTypes}
+                              onChange={(ev) => {setSearchQuery({...searchQuery,requiredQualification:ev.value})}}
                             />
                            </div>
                           <div className="filter-search-form relative filter-border">
                             <PiMapPin className="icons" />
                             <Select
                               className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
-                              placeholder="Experience"
-                              options={optionFour}
+                              placeholder="Gender"
+                              options={genders}
+                              onChange={(ev) => {setSearchQuery({...searchQuery,preferredGender:ev.value})}}
                             />
                           </div>
                         </div>
@@ -293,21 +293,22 @@ export default function IndexFive() {
                         </p>
                         <div className="filter-search-form relative filter-border">
                           <PiMapPin className="icons" />
-                          <Select
+                          <input
                             className="form-input filter-input-box bg-gray-50 dark:bg-slate-800 border-0"
                             placeholder="Enter Job Title or Description"
-                            options={optionFive}
+                            onChange={(ev) => {setSearchQuery({...searchQuery,search:ev.target.value})}}
                           />
                         </div>
                       </div>
 
                       <input
-                        type="submit"
+                        type="button"
                         id="search"
                         name="search"
                         style={{ marginTop: 10 }}
                         className="btn bg-emerald-600 hover:bg-emerald-700 border-emerald-600 hover:border-emerald-700 text-white searchbtn submit-btn w-100"
                         value="Search"
+                        onClick={searchJob}
                       />
                     </form>
                   </div>

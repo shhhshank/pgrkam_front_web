@@ -1,36 +1,50 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md"
 import { LuMapPin } from 'react-icons/lu';
 import { jobData } from '../data/data';
-export default function JobGridsTwoComp() {
+import JobApi from '../api/Job/JobApi';
+export default function JobGridsTwoComp({query}) {
+
+    const [jobs, setJobs] = useState([])
+
+    
+
+    useEffect(() => {
+        JobApi.filterJobs(query).then((jobResponse) => {
+            setJobs(jobResponse)
+        })
+    },[query])
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
   
     return (
         <>
             <div className="lg:col-span-8 md:col-span-6">
                 <div className="grid lg:grid-cols-2 gap-[30px]">
 
-                    {jobData.map((item, index) => (
+                    {jobs.map((item, index) => (
 
                         <div className="group shadow dark:shadow-gray-700 p-6 rounded-md bg-white dark:bg-slate-900" key={index}>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center">
-                                    <div className="w-14 h-14 flex items-center justify-center bg-white dark:bg-slate-900 shadow dark:shadow-gray-700 rounded-md">
-                                        <img src={item.image} className="h-8 w-8" alt="" />
-                                    </div>
+                                    
 
                                     <div className="ms-3">
-                                        <Link to={`/employer-detail/${item.id}`} className="block text-[16px] font-semibold hover:text-emerald-600 transition-all duration-500">{item.title}</Link>
-                                        <span className="block text-sm text-slate-400">{item.day}</span>
+                                        <Link to={`/employer-detail/${item.id}`} className="block text-[16px] font-semibold hover:text-emerald-600 transition-all duration-500">{capitalizeFirstLetter(item.experienceType.toLowerCase())}</Link>
+                                        <span className="block text-sm text-slate-400">{"3 Hours ago"}</span>
                                     </div>
                                 </div>
 
-                                <span className="bg-emerald-600/10 group-hover:bg-emerald-600 inline-block text-emerald-600 group-hover:text-white text-xs px-2.5 py-0.5 font-semibold rounded-full transition-all duration-500">{item.jobtype}</span>
+                                <span className="bg-emerald-600/10 group-hover:bg-emerald-600 inline-block text-emerald-600 group-hover:text-white text-xs px-2.5 py-0.5 font-semibold rounded-full transition-all duration-500">{capitalizeFirstLetter(item.jobType.toLowerCase())}</span>
                             </div>
 
                             <div className="mt-6">
-                                <Link to={`/job-detail-three/${item.id}`} className="text-lg hover:text-emerald-600 font-semibold transition-all duration-500">{item.heading}</Link>
-                                <h6 className="text-base font-medium flex items-center"><LuMapPin className ="me-1"/>{item.Location}</h6>
+                                <Link to={`/job-detail-three/${item.id}`} className="text-lg hover:text-emerald-600 font-semibold transition-all duration-500">{item.jobTitle}</Link>
+                                <h6 className="text-base font-medium flex items-center"><LuMapPin className ="me-1"/>{item.jobAddress.city + "/" + item.jobAddress.state}</h6>
                             </div>
 
                             <div className="mt-6">

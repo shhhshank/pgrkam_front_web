@@ -65,6 +65,7 @@ import Profile from './pages/auth/profile';
 import { useSelector } from 'react-redux';
 import SearchJob from './pages/job/SearchJob';
 import CreateJob from './pages/job/CreateJob';
+import Nearby from './pages/nearby/Nearby';
 
 
 
@@ -91,7 +92,8 @@ function App() {
         <Route path='/signup' element={<Signup />} />
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/search-job' element={<SearchJob/>}/>
-        <Route path='create-job' element={<CreateJob/>}/>
+        <Route path='/create-job' element={<CreateJob/>}/>
+        <Route path='/nearby' element={<Nearby/>}/>
         {/* <Route path='user-profile' element={<UserProfile/>} */}
 
 

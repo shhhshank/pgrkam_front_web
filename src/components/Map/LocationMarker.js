@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react"
+import { DollarSign } from "react-feather"
 import { Marker, Popup, useMapEvents } from "react-leaflet"
+
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import L, { Icon } from "leaflet";
+
 
 export default function LocationMarker({onLocationFound}) {
     const [position, setPosition] = useState(null)
@@ -21,9 +27,14 @@ export default function LocationMarker({onLocationFound}) {
             map.locate()
         }
     },[map])
-  
+    
+    let DefaultIcon = L.icon({
+        iconUrl: icon,
+        shadowUrl: iconShadow
+    });
+
     return position === null ? null : (
-      <Marker position={position}>
+      <Marker icon={DefaultIcon} position={position}>
         <Popup>You are here</Popup>
       </Marker>
     )
